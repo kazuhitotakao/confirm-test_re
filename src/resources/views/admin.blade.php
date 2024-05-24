@@ -12,19 +12,22 @@
     <form class="search-form" action="/admin/search" method="get">
         @csrf
         <div class="search-form__item">
-            <input class="search-form__item-input" type="text" name="keyword" value="{{ old('keyword') }}" placeholder="名前やメールアドレスを入力してください">
-            <select class="search-form__item-select" name="gender">
+            <input class="search-form__item-input" type="text" name="keyword" value="{{request('keyword')}}" placeholder="名前やメールアドレスを入力してください">
+            <select class="search-form__item-select" name="gender" value="{{request('gender')}}">
                 <option disabled selected>性別</option>
-                <option value="1">男性</option>
-                <option value="2">女性</option>
-                <option value="3">その他</option>
+                <option value="1" @if( request('gender')==1 ) selected @endif>男性</option>
+                <option value="2" @if( request('gender')==2 ) selected @endif>女性</option>
+                <option value="3" @if( request('gender')==3 ) selected @endif>その他</option>
             </select>
             <select class="search-form__item-select" name="category_id">
-                @foreach ($categories as $category)
-                <option value="{{ $category['id'] }}">{{ $category['content'] }}</option>
+                <option disabled selected>お問い合わせの種類</option>
+                @foreach($categories as $category)
+                <option value="{{ $category->id }}" @if( request('category_id')==$category->id ) selected @endif
+                    >{{$category->content }}
+                </option>
                 @endforeach
             </select>
-            <input class="search-form__item-input--date" type="date" name="created-at" value="">
+            <input class="search-form__item-input--date" type="date" name="created-at" value="{{request('date')}}">
         </div>
         <div class="search-form__button">
             <button class="search-form__button-submit" type="submit">検索</button>
@@ -32,9 +35,15 @@
         <div class="search-form__link">
             <a class="search-form__link-submit" href="/admin">リセット</a>
         </div>
-        {{ $contacts->appends(request()->query())->links('vendor.pagination.custom') }}
-
     </form>
+    <div class="export-form">
+        <form action="{{'/admin/export?'.http_build_query(request()->query())}}" method="post">
+            @csrf
+            <input class="export__btn" type="submit" value="エクスポート">
+        </form>
+        {{ $contacts->appends(request()->query())->links('vendor.pagination.custom') }}
+    </div>
+
     <div class="contacts-table">
         <table class="contacts-table__inner">
             <tr class="contacts-table__row">
