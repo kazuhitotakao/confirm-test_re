@@ -7,7 +7,7 @@ use App\Models\Category;
 use App\Models\Contact;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
-use Illuminate\Http\Request;
+use Illuminate\Http\Request;    
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
@@ -15,9 +15,10 @@ class AuthController extends Controller
 {
     public function index()
     {
-        $contacts = Contact::with('category')->get();
+        $contacts = Contact::with('category')->paginate(7);
         $categories = Category::all();
-        return view('admin', compact('contacts', 'categories'));
+        $csvData = Contact::all();
+        return view('admin', compact('contacts', 'categories','csvData'));
     }
     public function login()
     {

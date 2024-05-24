@@ -143,8 +143,9 @@
             </div>
             <div class="form__group-content--category">
                 <select class="form__item-select" name="category_id">
+                    <option disabled selected>選択してください</option>
                     @foreach ($categories as $category)
-                    <option value="{{ $category['id'] }}" {{ session('category_id') == $category['id'] ? 'selected' : '' }}>{{ $category['content'] }}</option>
+                    <option value="{{ $category['id'] }}" {{ old('category_id') == $category['id'] ? 'selected' : '' }}>{{ $category['content'] }}</option>
                     @endforeach
                 </select>
                 <div class="form__error">
